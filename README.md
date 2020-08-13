@@ -41,13 +41,7 @@ fn generate_my_struct() -> MyStruct {
 }
 ```
 
-## How it works 
-### Structs
-It calls `rng.gen()` on all the fields.
-### Enums 
-It will generate a random variant.
-
-## Customization
+### Customization
 Note: all things that can be customized is covered in the example crate
 #### Options
 To make sure an option is never generated with `None`, add the `always_some` attribute on top of the property.
@@ -58,7 +52,13 @@ If you want a custom value for one of the properties, add the `custom_rand` attr
 A trait is created called TestDataProviderFor$TYPE$. 
 This trait will require the user to provider the values.
 
-## TODO
+### How it works 
+#### Structs
+It calls `rng.gen()` on all the fields.
+#### Enums 
+It will generate a random variant.
+
+### TODO
 - Recursion for e.g. vec in vec
 - More types from the standard library covered
 - Functions documented
