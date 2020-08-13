@@ -1,0 +1,10 @@
+[package]
+name = "rand_derive2-example"
+version = "0.1.0"
+authors = ["Jasper Visser <jasperav@hotmail.com>"]
+edition = "2018"
+
+[dependencies]
+rand = "0.7"
+rand_derive2 = { path = "../../rand_derive2" }
+uuid = { version = "0.8", features = ["v4"] }
