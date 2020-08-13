@@ -4,6 +4,7 @@
 [![Build Status](https://img.shields.io/github/workflow/status/jasperav/rand_derive2/CI/master)](https://github.com/jasperav/rand_derive2/actions)
 
 Derive macro for generating random types with the `rand` crate. 
+It will implement the `rand::distributions::Standard` for a given type.
 
 ## Usage
 
@@ -63,6 +64,7 @@ It will generate a random variant.
 - More types from the standard library covered
 - Functions documented
 - Custom trait type/method names
+- Weighted randomization (currently only supports `rand::distributions::Standard`)
 
 #### License
 
