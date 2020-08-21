@@ -52,6 +52,8 @@ If a variant should never be generated, add the `skip_variant` attribute on the 
 If you want a custom value for one of the properties, add the `custom_rand` attribute.
 A trait is created called TestDataProviderFor$TYPE$. 
 This trait will require the user to provider the values.
+#### No rand
+Panic implementation of the property, making the type unable to be random generated.
 
 ### How it works 
 #### Structs
