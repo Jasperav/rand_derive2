@@ -83,6 +83,13 @@ mod test {
         field1: Option<i32>
     }
 
+    #[derive(RandGen)]
+    #[allow(dead_code)]
+    struct PleasePanic {
+        #[no_rand]
+        some_property: i32
+    }
+
     #[test]
     fn test_random_types() {
         let _: SomeFields = rand::random();
@@ -112,5 +119,11 @@ mod test {
 
         assert_eq!(CustomRand::STRING, custom_rand.field0);
         assert_eq!(CustomRand::vec(), custom_rand.field1);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_should_panic() {
+        let _: PleasePanic = rand::random();
     }
 }

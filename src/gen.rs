@@ -79,6 +79,10 @@ fn generated_values(
     );
     let value = if attributes_contains(&field.attrs, "custom_rand") {
         add_to_trait_methods(type_ident, &field_ident, &ty, &to_string, trait_methods)
+    } else if attributes_contains(&field.attrs, "no_rand") {
+        quote! {
+            panic!("This property can not be generated")
+        }
     } else if to_string == "Option" {
         // TODO: nicer way to get the inner type?
         let inner =
