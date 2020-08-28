@@ -54,6 +54,7 @@ A trait is created called TestDataProviderFor$TYPE$.
 This trait will require the user to provider the values.
 #### No rand
 Panic implementation of the property, making the type unable to be random generated.
+Note: place `#[allow(unreachable_code)]` above your type to omit compiler warnings.
 
 ### How it works 
 #### Structs

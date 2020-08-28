@@ -6,7 +6,8 @@ use proc_macro2_helper::attributes_contains;
 use quote::format_ident;
 use std::collections::HashMap;
 
-const TRAIT_NAME: &'static str = "TestDataProvider";
+const TRAIT_NAME: &str = "TestDataProvider";
+
 pub type TraitMethods = HashMap<String, TokenStream>;
 
 pub(crate) fn transform(input: DeriveInput) -> TokenStream {
@@ -74,9 +75,7 @@ fn generated_values(
     };
 
     let (full_type, to_string) = extract_type(&ty);
-    let ts_value = generate_value(
-        &to_string,
-    );
+    let ts_value = generate_value(&to_string);
     let value = if attributes_contains(&field.attrs, "no_rand") {
         quote! {
             panic!("This property can not be generated")
@@ -86,7 +85,7 @@ fn generated_values(
     } else if to_string == "Option" {
         // TODO: nicer way to get the inner type?
         let inner =
-            &full_type[full_type.find("Option<").unwrap() + 7..full_type.rfind(">").unwrap()];
+            &full_type[full_type.find("Option<").unwrap() + 7..full_type.rfind('>').unwrap()];
         let ts_value = generate_value(inner);
 
         if attributes_contains(&field.attrs, "always_some") {
@@ -152,9 +151,7 @@ fn add_to_trait_methods(
     }
 }
 
-fn generate_value(
-    ty_str: &str,
-) -> TokenStream {
+fn generate_value(ty_str: &str) -> TokenStream {
     if ty_str == "String" {
         // TODO: Maybe more customization for this type
         quote! {

@@ -1,8 +1,8 @@
-#[macro_use]
-extern crate rand_derive2;
-
 #[cfg(test)]
+#[allow(unreachable_code)]
 mod test {
+    use rand_derive2::RandGen;
+
     #[derive(RandGen)]
     #[allow(dead_code)]
     struct SomeFields {
