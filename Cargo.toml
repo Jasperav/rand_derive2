@@ -6,7 +6,7 @@ edition = "2018"
 description = "Generate customizable random types with the rand crate"
 readme = "README.md"
 keywords = ["rand", "random", "generate", "macro", "derive"]
-license = "MIT"
+license = "MIT/Apache-2.0"
 repository = "https://github.com/jasperav/rand_derive2"
 
 [lib]
