@@ -46,6 +46,7 @@ fn generate_my_struct() -> MyStruct {
 Note: all things that can be customized is covered in the example crate
 #### Options
 To make sure an option is never generated with `None`, add the `always_some` attribute on top of the property.
+To make sure an option is never generated with `Some`, add the `always_none` attribute on top of the property.
 #### Skip enum variant
 If a variant should never be generated, add the `skip_variant` attribute on the variant. 
 #### Custom value

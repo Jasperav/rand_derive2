@@ -88,7 +88,11 @@ fn generated_values(
             &full_type[full_type.find("Option<").unwrap() + 7..full_type.rfind('>').unwrap()];
         let ts_value = generate_value(inner);
 
-        if attributes_contains(&field.attrs, "always_some") {
+        if attributes_contains(&field.attrs, "always_none") {
+            quote! {
+                None
+            }
+        } else if attributes_contains(&field.attrs, "always_some") {
             quote! {
                 Some(#ts_value)
             }

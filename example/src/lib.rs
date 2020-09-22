@@ -90,6 +90,13 @@ mod test {
         some_property: i32
     }
 
+    #[derive(RandGen)]
+    #[allow(dead_code)]
+    struct NoneOption {
+        #[always_none]
+        some_property: Option<i32>
+    }
+
     #[test]
     fn test_random_types() {
         let _: SomeFields = rand::random();
@@ -110,6 +117,11 @@ mod test {
             let options: Options = rand::random();
 
             assert!(options.field0.is_some(), options.field0);
+
+            // Generate a NoneOption and verify its property is always None
+            let op: NoneOption = rand::random();
+
+            assert_eq!(op.some_property, None);
         }
     }
 
