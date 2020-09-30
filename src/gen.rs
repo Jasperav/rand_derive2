@@ -42,6 +42,12 @@ pub(crate) fn transform(input: DeriveInput) -> TokenStream {
                 #ts
             }
         }
+
+        impl #name {
+            pub fn generate_random() -> Self {
+                rand::random()
+            }
+        }
     });
 
     tokens

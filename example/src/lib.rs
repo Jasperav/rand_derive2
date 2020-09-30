@@ -103,6 +103,11 @@ mod test {
         let _: Recursive = rand::random();
         let _: UnnamedBoi = rand::random();
         let _: SomeEnum = rand::random();
+
+        let _ = SomeFields::generate_random();
+        let _ = Recursive::generate_random();
+        let _ = UnnamedBoi::generate_random();
+        let _ = SomeEnum::generate_random();
     }
 
     #[test]

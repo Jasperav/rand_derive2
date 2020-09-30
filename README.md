@@ -40,6 +40,11 @@ struct MyStruct {}
 fn generate_my_struct() -> MyStruct { 
     rand::random()
 }
+
+// Or like this
+fn generate_my_struct_direct() -> MyStruct { 
+    MyStruct::generate_random()
+}
 ```
 
 ### Customization
