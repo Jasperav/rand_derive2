@@ -152,12 +152,12 @@ fn add_to_trait_methods(
     trait_methods.insert(
         generate_ty_name.to_string(),
         quote! {
-           fn #generate_ty_name() -> #ty;
+           fn #generate_ty_name<R: rand::Rng + ?Sized>(rng: &mut R) -> #ty;
         },
     );
 
     quote! {
-        <#type_ident as #trait_name>::#generate_ty_name()
+        <#type_ident as #trait_name>::#generate_ty_name(rng)
     }
 }
 
