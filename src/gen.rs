@@ -1,6 +1,6 @@
 use proc_macro2::{Ident, TokenStream};
 use quote::{quote, ToTokens};
-use syn::{Data, DeriveInput, Field, FieldsNamed, FieldsUnnamed, Type, TypePath, Attribute};
+use syn::{Attribute, Data, DeriveInput, Field, FieldsNamed, FieldsUnnamed, Type, TypePath};
 
 use proc_macro2_helper::attributes_contains;
 use quote::format_ident;
