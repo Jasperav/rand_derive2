@@ -161,7 +161,7 @@ fn add_to_trait_methods(
     }
 }
 
-fn generate_value(ty_str: &str, attrs: &Vec<Attribute>) -> TokenStream {
+fn generate_value(ty_str: &str, attrs: &[Attribute]) -> TokenStream {
     if ty_str == "String" {
         if attributes_contains(attrs, "empty") {
             quote! {
