@@ -22,6 +22,8 @@ mod test {
         field3: UnitStruct,
         field4: Vec<u8>,
         field5: std::vec::Vec<u8>,
+        #[empty]
+        field6: std::string::String,
     }
 
     #[derive(RandGen)]
@@ -100,7 +102,11 @@ mod test {
     #[test]
     fn test_random_types() {
         let _: SomeFields = rand::random();
-        let _: Recursive = rand::random();
+        let recursive: Recursive = rand::random();
+
+        assert!(!recursive.field1.is_empty());
+        assert!(recursive.field6.is_empty());
+
         let _: UnnamedBoi = rand::random();
         let _: SomeEnum = rand::random();
 

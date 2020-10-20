@@ -1,6 +1,6 @@
 use proc_macro2::{Ident, TokenStream};
 use quote::{quote, ToTokens};
-use syn::{Data, DeriveInput, Field, FieldsNamed, FieldsUnnamed, Type, TypePath};
+use syn::{Data, DeriveInput, Field, FieldsNamed, FieldsUnnamed, Type, TypePath, Attribute};
 
 use proc_macro2_helper::attributes_contains;
 use quote::format_ident;
@@ -81,7 +81,7 @@ fn generated_values(
     };
 
     let (full_type, to_string) = extract_type(&ty);
-    let ts_value = generate_value(&to_string);
+    let ts_value = generate_value(&to_string, &field.attrs);
     let value = if attributes_contains(&field.attrs, "no_rand") {
         quote! {
             panic!("This property can not be generated")
@@ -92,7 +92,7 @@ fn generated_values(
         // TODO: nicer way to get the inner type?
         let inner =
             &full_type[full_type.find("Option<").unwrap() + 7..full_type.rfind('>').unwrap()];
-        let ts_value = generate_value(inner);
+        let ts_value = generate_value(inner, &field.attrs);
 
         if attributes_contains(&field.attrs, "always_none") {
             quote! {
@@ -161,14 +161,19 @@ fn add_to_trait_methods(
     }
 }
 
-fn generate_value(ty_str: &str) -> TokenStream {
+fn generate_value(ty_str: &str, attrs: &Vec<Attribute>) -> TokenStream {
     if ty_str == "String" {
-        // TODO: Maybe more customization for this type
-        quote! {
-            rng
-                .sample_iter(&rand::distributions::Alphanumeric)
-                .take(10)
-                .collect()
+        if attributes_contains(attrs, "empty") {
+            quote! {
+                "".to_string()
+            }
+        } else {
+            quote! {
+                rng
+                    .sample_iter(&rand::distributions::Alphanumeric)
+                    .take(10)
+                    .collect()
+            }
         }
     } else if ty_str == "Uuid" {
         quote! {

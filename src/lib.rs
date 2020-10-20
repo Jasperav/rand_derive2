@@ -6,7 +6,7 @@ mod gen_struct;
 
 #[proc_macro_derive(
     RandGen,
-    attributes(skip_variant, always_some, always_none, custom_rand, no_rand)
+    attributes(skip_variant, always_some, always_none, custom_rand, no_rand, empty)
 )]
 pub fn rand_gen(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let input: DeriveInput = syn::parse(input).unwrap();
