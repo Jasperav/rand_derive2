@@ -162,18 +162,16 @@ fn add_to_trait_methods(
 }
 
 fn generate_value(ty_str: &str, attrs: &[Attribute]) -> TokenStream {
-    if ty_str == "String" {
-        if attributes_contains(attrs, "empty") {
-            quote! {
-                "".to_string()
-            }
-        } else {
-            quote! {
-                rng
-                    .sample_iter(&rand::distributions::Alphanumeric)
-                    .take(10)
-                    .collect()
-            }
+    if attributes_contains(attrs, "default_rand") {
+        quote! {
+            Default::default()
+        }
+    } else if ty_str == "String" {
+        quote! {
+            rng
+                .sample_iter(&rand::distributions::Alphanumeric)
+                .take(10)
+                .collect()
         }
     } else if ty_str == "Uuid" {
         quote! {

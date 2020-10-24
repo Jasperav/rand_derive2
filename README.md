@@ -61,8 +61,8 @@ This trait will require the user to provider the values.
 #### No rand
 Panic implementation of the property, making the type unable to be random generated.
 Note: place `#[allow(unreachable_code)]` above your type to omit compiler warnings.
-#### Empty
-Place this above a string type to make it generate an empty string.
+#### Default_rand
+Place `default_rand` above a type to make it generate the default value.
 
 ### How it works 
 #### Structs

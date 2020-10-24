@@ -22,7 +22,7 @@ mod test {
         field3: UnitStruct,
         field4: Vec<u8>,
         field5: std::vec::Vec<u8>,
-        #[empty]
+        #[default_rand]
         field6: std::string::String,
     }
 
