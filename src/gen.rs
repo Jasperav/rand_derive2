@@ -1,8 +1,8 @@
 use proc_macro2::{Ident, TokenStream};
 use quote::{quote, ToTokens};
-use syn::{Attribute, Data, DeriveInput, Field, FieldsNamed, FieldsUnnamed, Type, TypePath};
+use syn::{Data, DeriveInput, Field, FieldsNamed, FieldsUnnamed, Type, TypePath};
 
-use proc_macro2_helper::attributes_contains;
+use crate::{attrs_to_customizes, fixed_value, has_customize, Customize};
 use quote::format_ident;
 use std::collections::HashMap;
 
@@ -35,6 +35,9 @@ pub(crate) fn transform(input: DeriveInput) -> TokenStream {
     }
 
     tokens.extend(quote! {
+        // Set the attribute unreachable code here, since there is a field attribute 'panic' in which
+        // the type can not be generated
+        #[allow(unreachable_code)]
         impl rand::distributions::Distribution<#name> for rand::distributions::Standard {
             fn sample<R: rand::Rng + ?Sized>(&self, rng: &mut R) -> #name {
                 use rand::Rng;
@@ -72,6 +75,7 @@ fn generated_values(
     field: Field,
     trait_methods: &mut TraitMethods,
 ) -> TokenStream {
+    let customizes = attrs_to_customizes(&field.attrs);
     let ty = field.ty;
     let prefix = match &field_ident {
         None => quote! {},
@@ -81,24 +85,24 @@ fn generated_values(
     };
 
     let (full_type, to_string) = extract_type(&ty);
-    let ts_value = generate_value(&to_string, &field.attrs);
-    let value = if attributes_contains(&field.attrs, "no_rand") {
+    let ts_value = generate_value(&to_string, &customizes);
+    let value = if has_customize(&customizes, Customize::Panic) {
         quote! {
             panic!("This property can not be generated")
         }
-    } else if attributes_contains(&field.attrs, "custom_rand") {
+    } else if has_customize(&customizes, Customize::Custom) {
         add_to_trait_methods(type_ident, &field_ident, &ty, &to_string, trait_methods)
     } else if to_string == "Option" {
         // TODO: nicer way to get the inner type?
         let inner =
             &full_type[full_type.find("Option<").unwrap() + 7..full_type.rfind('>').unwrap()];
-        let ts_value = generate_value(inner, &field.attrs);
+        let ts_value = generate_value(inner, &customizes);
 
-        if attributes_contains(&field.attrs, "always_none") {
+        if has_customize(&customizes, Customize::AlwaysNone) {
             quote! {
                 None
             }
-        } else if attributes_contains(&field.attrs, "always_some") {
+        } else if has_customize(&customizes, Customize::AlwaysSome) {
             quote! {
                 Some(#ts_value)
             }
@@ -161,8 +165,30 @@ fn add_to_trait_methods(
     }
 }
 
-fn generate_value(ty_str: &str, attrs: &[Attribute]) -> TokenStream {
-    if attributes_contains(attrs, "default_rand") {
+fn generate_value(ty_str: &str, customizes: &[Customize]) -> TokenStream {
+    let fixed_value = fixed_value(customizes);
+
+    if ty_str == "String" || ty_str == "str" {
+        if let Some(fixed_value) = fixed_value {
+            return if ty_str == "String" {
+                quote! {
+                    stringify!(#fixed_value).to_string()
+                }
+            } else {
+                quote! {
+                    stringify!(#fixed_value)
+                }
+            };
+        }
+    }
+
+    if let Some(fixed_value) = fixed_value {
+        return quote! {
+            #fixed_value
+        };
+    }
+
+    if has_customize(&customizes, Customize::Default) {
         quote! {
             Default::default()
         }

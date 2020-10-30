@@ -1,5 +1,4 @@
 #[cfg(test)]
-#[allow(unreachable_code)]
 mod test {
     use rand_derive2::RandGen;
 
@@ -22,18 +21,18 @@ mod test {
         field3: UnitStruct,
         field4: Vec<u8>,
         field5: std::vec::Vec<u8>,
-        #[default_rand]
+        #[rand_derive(default)]
         field6: std::string::String,
     }
 
     #[derive(RandGen)]
     #[allow(dead_code)]
     struct CustomRand {
-        #[custom_rand]
+        #[rand_derive(custom)]
         field0: &'static str,
-        #[custom_rand]
+        #[rand_derive(custom)]
         field1: Vec<i32>,
-        #[custom_rand]
+        #[rand_derive(custom)]
         field2: UnitStruct
     }
 
@@ -71,7 +70,7 @@ mod test {
 
     #[derive(RandGen, PartialEq, Debug)]
     pub enum SomeEnumSkipVariants {
-        #[skip_variant]
+        #[rand_derive(skip)]
         SkipMe,
         DontSkipMe,
         DontSkipMeAlso
@@ -80,7 +79,7 @@ mod test {
     #[derive(RandGen)]
     #[allow(dead_code)]
     struct Options {
-        #[always_some]
+        #[rand_derive(some)]
         field0: Option<i32>,
         field1: Option<i32>
     }
@@ -88,15 +87,28 @@ mod test {
     #[derive(RandGen)]
     #[allow(dead_code)]
     struct PleasePanic {
-        #[no_rand]
+        #[rand_derive(panic)]
         some_property: i32
     }
 
     #[derive(RandGen)]
     #[allow(dead_code)]
     struct NoneOption {
-        #[always_none]
+        #[rand_derive(none)]
         some_property: Option<i32>
+    }
+    #[derive(RandGen)]
+    struct Fixed {
+        #[rand_derive(fixed = "static")]
+        str: &'static str,
+        #[rand_derive(fixed = "Some String")]
+        string: String,
+        #[rand_derive(fixed = "1")]
+        i32: i32,
+        #[rand_derive(fixed = "false")]
+        bool_false: bool,
+        #[rand_derive(fixed = "true")]
+        bool_true: bool
     }
 
     #[test]
@@ -114,6 +126,17 @@ mod test {
         let _ = Recursive::generate_random();
         let _ = UnnamedBoi::generate_random();
         let _ = SomeEnum::generate_random();
+    }
+
+    #[test]
+    fn test_fixed() {
+        let generated = Fixed::generate_random();
+
+        assert_eq!("static",generated.str);
+        assert_eq!("Some String",generated.string);
+        assert_eq!(1,generated.i32);
+        assert_eq!(false,generated.bool_false);
+        assert_eq!(true,generated.bool_true);
     }
 
     #[test]

@@ -50,25 +50,31 @@ fn generate_my_struct_direct() -> MyStruct {
 ### Customization
 Note: all things that can be customized is covered in the example crate
 #### Options
-To make sure an option is never generated with `None`, add the `always_some` attribute on top of the property.
-To make sure an option is never generated with `Some`, add the `always_none` attribute on top of the property.
+To make sure an option is never generated with `None`, add the `rand_derive(none)` attribute on top of the property.
+To make sure an option is never generated with `Some`, add the `rand_derive(some)` attribute on top of the property.
 #### Skip enum variant
-If a variant should never be generated, add the `skip_variant` attribute on the variant. 
+If a variant should never be generated, add the `rand_derive(skip)` attribute on the variant. 
 #### Custom value
-If you want a custom value for one of the properties, add the `custom_rand` attribute.
+If you want a custom value for one of the properties, add the `rand_derive(custom)` attribute.
 A trait is created called TestDataProviderFor$TYPE$. 
 This trait will require the user to provider the values.
 #### No rand
 Panic implementation of the property, making the type unable to be random generated.
-Note: place `#[allow(unreachable_code)]` above your type to omit compiler warnings.
-#### Default_rand
-Place `default_rand` above a type to make it generate the default value.
+Add the `rand_derive(panic)` attribute for this case.
+#### Default value
+Place `rand_derive(default)` above a field to make it generate the default value.
+#### Fixed value
+Place `rand_derive(fixed = "MY_VALUE")` above a field to make it generate the fixed value.
 
 ### How it works 
 #### Structs
 It calls `rng.gen()` on all the fields.
 #### Enums 
 It will generate a random variant.
+
+### Types with lifetimes
+It doesn't make sense to generate a type with a lifetime attached, because than a type with the owned values must be
+created somewhere, but where? It could be _maybe_ done by leaking the type that owns the values, but that isn't implemented at the moment.
 
 ### TODO
 - Recursion for e.g. vec in vec
