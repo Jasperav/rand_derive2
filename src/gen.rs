@@ -2,9 +2,9 @@ use proc_macro2::{Ident, TokenStream};
 use quote::{quote, ToTokens};
 use syn::{Data, DeriveInput, Field, FieldsNamed, FieldsUnnamed, Type, TypePath};
 
-use crate::{attrs_to_customizes, fixed_value, has_customize, Customize};
 use quote::format_ident;
 use std::collections::HashMap;
+use crate::parser::{Customize, fixed_value, has_customize, attrs_to_customizes};
 
 const TRAIT_NAME: &str = "TestDataProvider";
 
