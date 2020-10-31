@@ -1,9 +1,9 @@
+use crate::parser::Customize::{AlwaysNone, AlwaysSome, Custom, Panic, Skip};
 use proc_macro2::TokenStream;
 #[allow(unused_imports)]
 use std::str::FromStr;
 use syn::parse::{Parse, ParseBuffer};
 use syn::Attribute;
-use crate::parser::Customize::{Skip, AlwaysSome, AlwaysNone, Custom, Panic};
 
 #[allow(clippy::ptr_arg)]
 pub(crate) fn attrs_to_customizes(attrs: &Vec<Attribute>) -> Vec<Customize> {
@@ -47,7 +47,7 @@ impl Parse for Fixed {
 
         Ok(Fixed {
             ident,
-            // There are still leading and trailing quotes, this needs to be fixed
+            // There are still leading and trailing quotes, this needs to be removed
             stream: Some(lit.to_string().replace('\"', "")),
         })
     }

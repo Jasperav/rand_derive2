@@ -1,7 +1,5 @@
 use syn::DeriveInput;
 
-#[allow(unused_imports)]
-
 mod gen;
 mod gen_enum;
 mod gen_struct;
