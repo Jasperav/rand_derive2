@@ -132,11 +132,11 @@ mod test {
     fn test_fixed() {
         let generated = Fixed::generate_random();
 
-        assert_eq!("static",generated.str);
-        assert_eq!("Some String",generated.string);
-        assert_eq!(1,generated.i32);
-        assert_eq!(false,generated.bool_false);
-        assert_eq!(true,generated.bool_true);
+        assert_eq!("static", generated.str);
+        assert_eq!("Some String", generated.string);
+        assert_eq!(1, generated.i32);
+        assert_eq!(false, generated.bool_false);
+        assert_eq!(true, generated.bool_true);
     }
 
     #[test]
