@@ -112,6 +112,14 @@ mod test {
     }
 
     #[test]
+    fn test_customize() {
+        let fixed = Fixed::generate_random_customize(|f| f.i32 = 2);
+
+        assert_eq!(2, fixed.i32);
+        assert_eq!("static", fixed.str);
+    }
+
+    #[test]
     fn test_random_types() {
         let _: SomeFields = rand::random();
         let recursive: Recursive = rand::random();
