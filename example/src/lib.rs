@@ -59,6 +59,12 @@ mod test {
     }
 
     #[derive(RandGen)]
+    struct DefaultVecIsEmptyVec {
+        #[rand_derive(empty)]
+        empty_vec: Vec<i32>
+    }
+
+    #[derive(RandGen)]
     struct UnnamedBoi(SomeFields, String, i32);
 
     #[derive(RandGen)]
@@ -134,6 +140,9 @@ mod test {
         let _ = Recursive::generate_random();
         let _ = UnnamedBoi::generate_random();
         let _ = SomeEnum::generate_random();
+        let t = DefaultVecIsEmptyVec::generate_random().empty_vec;
+
+        assert!(t.is_empty());
     }
 
     #[test]

@@ -62,7 +62,10 @@ This trait will require the user to provider the values.
 Panic implementation of the property, making the type unable to be random generated.
 Add the `rand_derive(panic)` attribute for this case.
 #### Default value
-Place `rand_derive(default)` above a field to make it generate the default value.
+Place `rand_derive(default)` above a field to make it generate the default value. Note: for a Vec, this will create a vec
+with 1 element inside it which holds the default value.
+#### Empty
+Can be placed above types which holds a Vec. It will generate an empty vec.
 #### Fixed value
 Place `rand_derive(fixed = "MY_VALUE")` above a field to make it generate the fixed value.
 

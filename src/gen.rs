@@ -124,9 +124,15 @@ fn generated_values(
             }
         }
     } else if to_string == "Vec" {
-        // TODO: recursion?
-        quote! {
-            vec![#ts_value]
+        if has_customize(&customizes, Customize::Empty) {
+            quote! {
+                vec![]
+            }
+        } else {
+            // TODO: recursion?
+            quote! {
+                vec![#ts_value]
+            }
         }
     } else {
         ts_value

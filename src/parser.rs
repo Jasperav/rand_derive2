@@ -1,4 +1,4 @@
-use crate::parser::Customize::{AlwaysNone, AlwaysSome, Custom, Panic, Skip};
+use crate::parser::Customize::{AlwaysNone, AlwaysSome, Custom, Panic, Skip, Empty};
 use proc_macro2::TokenStream;
 #[allow(unused_imports)]
 use std::str::FromStr;
@@ -61,6 +61,7 @@ pub(crate) enum Customize {
     Custom,
     Panic,
     Default,
+    Empty,
     Fixed(String),
 }
 
@@ -77,6 +78,7 @@ impl Parse for Customize {
                 "custom" => Custom,
                 "panic" => Panic,
                 "default" => Customize::Default,
+                "empty" => Empty,
                 "fixed" => unreachable!(),
                 _ => panic!("Unknown customization: {}", fixed.ident),
             },
