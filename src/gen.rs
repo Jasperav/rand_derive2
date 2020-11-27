@@ -51,7 +51,7 @@ pub(crate) fn transform(input: DeriveInput) -> TokenStream {
                 rand::random()
             }
 
-            pub fn generate_random_customize<T: FnOnce(&mut Self) -> ()>(customize: T) -> Self {
+            pub fn generate_random_customize<T: FnOnce(&mut Self)>(customize: T) -> Self {
                 let mut entity = rand::random();
 
                 customize(&mut entity);
