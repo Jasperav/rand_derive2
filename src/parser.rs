@@ -1,4 +1,4 @@
-use crate::parser::Customize::{AlwaysNone, AlwaysSome, Custom, Panic, Skip, Empty};
+use crate::parser::Customize::{AlwaysNone, AlwaysSome, Custom, Empty, Panic, Skip};
 use proc_macro2::TokenStream;
 #[allow(unused_imports)]
 use std::str::FromStr;
