@@ -211,6 +211,7 @@ fn generate_value(ty_str: &str, customizes: &[Customize]) -> TokenStream {
             rng
                 .sample_iter(&rand::distributions::Alphanumeric)
                 .take(10)
+                .map(char::from)
                 .collect()
         }
     } else if ty_str == "Uuid" {
