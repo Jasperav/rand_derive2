@@ -202,7 +202,7 @@ fn generate_value(ty_str: &str, customizes: &[Customize]) -> TokenStream {
         };
     }
 
-    if has_customize(&customizes, Customize::Default) {
+    if has_customize(customizes, Customize::Default) {
         quote! {
             Default::default()
         }

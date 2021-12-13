@@ -94,7 +94,7 @@ pub(crate) fn has_customize(customizes: &[Customize], customize: Customize) -> b
 pub(crate) fn fixed_value(customizes: &[Customize]) -> Option<TokenStream> {
     customizes.iter().find_map(|c| {
         if let Customize::Fixed(fixed) = c {
-            Some(TokenStream::from_str(&fixed).unwrap())
+            Some(TokenStream::from_str(fixed).unwrap())
         } else {
             None
         }
