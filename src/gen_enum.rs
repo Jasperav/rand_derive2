@@ -53,7 +53,7 @@ pub fn generate(name: &Ident, trait_methods: &mut TraitMethods, de: DataEnum) ->
         })
         .collect::<Vec<_>>();
     quote! {
-        let random_val = rand::thread_rng().gen_range(0..#variants_len);
+        let random_val = rng.gen_range(0..#variants_len);
 
         match random_val {
             #(#range => #ts,)*

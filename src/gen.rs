@@ -116,7 +116,7 @@ fn generated_values(
             }
         } else {
             quote! {
-                if rand::random() {
+                if rng.gen() {
                     Some(#ts_value)
                 } else {
                     None
