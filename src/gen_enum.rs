@@ -1,18 +1,18 @@
 use crate::gen::{
-    generated_values_for_named_fields, generated_values_for_unnamed_fields, TraitMethods,
+generated_values_for_named_fields, generated_values_for_unnamed_fields, TraitMethods,
 };
 use crate::parser::{attrs_to_customizes, has_customize, Customize};
 use proc_macro2::{Ident, TokenStream};
 use quote::quote;
 use syn::{DataEnum, Fields};
 
-pub fn generate(name: &Ident, trait_methods: &mut TraitMethods, de: DataEnum) -> TokenStream {
-    let variants = de
-        .variants
-        .into_iter()
-        // Filter out variants annotated with SkipVariant
-        .filter(|v| {
-            let customizes = attrs_to_customizes(&v.attrs);
+pub fn generate(name: \&Ident, trait_methods: \&mut TraitMethods, de: DataEnum) -> TokenStream {
+let variants = de
+.variants
+.into_iter()
+// Filter out variants annotated with SkipVariant
+.filter(|v| {
+let customizes = attrs_to_customizes(\&v.attrs);
 
             !has_customize(&customizes, Customize::Skip)
         })
@@ -57,7 +57,8 @@ pub fn generate(name: &Ident, trait_methods: &mut TraitMethods, de: DataEnum) ->
 
         match random_val {
             #(#range => #ts,)*
-            _ => panic!()
+            _ => core::hint::unreachable_unchecked()
         }
     }
+
 }
