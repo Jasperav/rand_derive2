@@ -57,7 +57,7 @@ pub fn generate(name: &Ident, trait_methods: &mut TraitMethods, de: DataEnum) ->
 
         match random_val {
             #(#range => #ts,)*
-            _ => core::hint::unreachable_unchecked()
+            _ => unsafe { core::hint::unreachable_unchecked() }
         }
     }
 }
