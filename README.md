@@ -15,7 +15,7 @@ Check out the example crate or follow the instructions below.
 ```toml
 [dependencies]
 rand-derive = "0.1"
-rand = "0.7"
+rand = "0.8"
 ```
 
 2. Import the macro somewhere in your file where your type is:
