@@ -1,6 +1,6 @@
 [package]
 name = "rand_derive2"
-version = "0.1.19"
+version = "0.1.20"
 authors = ["Jasper Visser <jasperav@hotmail.com>"]
 edition = "2021"
 description = "Generate customizable random types with the rand crate"
