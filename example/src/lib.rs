@@ -167,7 +167,7 @@ mod test {
             // Generate a Options and verify field0 is always filled
             let options: Options = rand::random();
 
-            assert!(options.field0.is_some(), options.field0);
+            assert!(options.field0.is_some());
 
             // Generate a NoneOption and verify its property is always None
             let op: NoneOption = rand::random();

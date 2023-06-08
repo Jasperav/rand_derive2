@@ -1,5 +1,6 @@
 use crate::parser::Customize::{AlwaysNone, AlwaysSome, Custom, Empty, Panic, Skip};
 use proc_macro2::TokenStream;
+use quote::ToTokens;
 #[allow(unused_imports)]
 use std::str::FromStr;
 use syn::parse::{Parse, ParseBuffer};
@@ -15,42 +16,11 @@ pub(crate) fn attrs_to_customizes(attrs: &Vec<Attribute>) -> Vec<Customize> {
                 return None;
             }
 
-            let clone: proc_macro::TokenStream = a.tokens.into();
+            let tokens = &a.meta.require_list().unwrap().tokens;
 
-            Some(syn::parse2::<Customize>(clone.into()).unwrap())
+            Some(syn::parse2::<Customize>(tokens.to_token_stream().into()).unwrap())
         })
         .collect()
-}
-
-struct Fixed {
-    ident: String,
-    stream: Option<String>,
-}
-
-impl Parse for Fixed {
-    fn parse(input: &ParseBuffer) -> syn::Result<Self> {
-        let ident: proc_macro2::Ident = syn::parse::Parse::parse(input)?;
-        let ident = ident.to_string();
-
-        if ident.as_str() != "fixed" {
-            return Ok(Fixed {
-                ident,
-                stream: None,
-            });
-        }
-
-        // This is the equal sign
-        let _: proc_macro2::Punct = syn::parse::Parse::parse(input)?;
-
-        // This is the actual value
-        let lit: proc_macro2::Literal = syn::parse::Parse::parse(input)?;
-
-        Ok(Fixed {
-            ident,
-            // There are still leading and trailing quotes, this needs to be removed
-            stream: Some(lit.to_string().replace('\"', "")),
-        })
-    }
 }
 
 #[derive(PartialEq, Clone, Debug)]
@@ -67,11 +37,21 @@ pub(crate) enum Customize {
 
 impl Parse for Customize {
     fn parse(input: &ParseBuffer) -> syn::Result<Self> {
-        let group = proc_macro2::Group::parse(input).unwrap();
-        let fixed = syn::parse2::<Fixed>(group.stream())?;
+        let ident: proc_macro2::Ident = syn::parse::Parse::parse(input)?;
+        let ident = ident.to_string();
+        let result = if ident == "fixed" {
+            // This is the equal sign
+            let _: proc_macro2::Punct = syn::parse::Parse::parse(input)?;
 
-        Ok(match fixed.stream {
-            None => match fixed.ident.as_str() {
+            // This is the actual value
+            let lit: proc_macro2::Literal = syn::parse::Parse::parse(input)?;
+
+            // There are still leading and trailing quotes, this needs to be removed
+            let replaced_value = lit.to_string().replace('\"', "");
+
+            Customize::Fixed(replaced_value)
+        } else {
+            match ident.as_str() {
                 "skip" => Skip,
                 "some" => AlwaysSome,
                 "none" => AlwaysNone,
@@ -79,11 +59,11 @@ impl Parse for Customize {
                 "panic" => Panic,
                 "default" => Customize::Default,
                 "empty" => Empty,
-                "fixed" => unreachable!(),
-                _ => panic!("Unknown customization: {}", fixed.ident),
-            },
-            Some(stream) => Customize::Fixed(stream),
-        })
+                _ => panic!("Unknown customization: {}", ident),
+            }
+        };
+
+        Ok(result)
     }
 }
 

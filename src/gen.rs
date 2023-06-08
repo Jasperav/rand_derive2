@@ -12,9 +12,7 @@ pub type TraitMethods = HashMap<String, TokenStream>;
 
 pub(crate) fn transform(input: DeriveInput) -> TokenStream {
     let name = &input.ident;
-
     let mut trait_methods = TraitMethods::new();
-
     let ts = match input.data {
         Data::Struct(ds) => crate::gen_struct::generate(name, &mut trait_methods, ds),
         Data::Enum(de) => crate::gen_enum::generate(name, &mut trait_methods, de),
