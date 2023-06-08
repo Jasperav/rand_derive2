@@ -18,7 +18,7 @@ pub(crate) fn attrs_to_customizes(attrs: &Vec<Attribute>) -> Vec<Customize> {
 
             let tokens = &a.meta.require_list().unwrap().tokens;
 
-            Some(syn::parse2::<Customize>(tokens.to_token_stream().into()).unwrap())
+            Some(syn::parse2::<Customize>(tokens.to_token_stream()).unwrap())
         })
         .collect()
 }
