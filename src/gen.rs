@@ -25,7 +25,7 @@ pub(crate) fn transform(input: DeriveInput) -> TokenStream {
         let trait_methods = trait_methods.values().cloned().collect::<Vec<_>>();
         let trait_name = trait_name(name);
 
-        let doc_msg = format!("Derived trait used to customize the generation of the type `{}`", name);
+        let doc_msg = format!("Derived trait used to customize the generation of type `{}`", name);
 
         tokens.extend(quote! {
             #[doc = #doc_msg]
@@ -170,7 +170,10 @@ fn add_to_trait_methods(
         Some(f) => format_ident!("generate_{}", f),
     };
 
-    let doc_msg = format!("Generates a custom random instance of the type `{}`", ty_str);
+    let doc_msg = format!(
+        "Generates a custom random instance of `{}`", 
+        field_ident.as_ref().map(|x| x.to_string()).unwrap_or(ty_str.to_string())
+    );
 
     trait_methods.insert(
         generate_ty_name.to_string(),
