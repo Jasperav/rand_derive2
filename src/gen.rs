@@ -165,18 +165,16 @@ fn add_to_trait_methods(
     trait_methods: &mut TraitMethods,
 ) -> TokenStream {
     let trait_name = trait_name(type_ident);
-    let generate_ty_name = match field_ident {
-        None => format_ident!("generate_random_{}", ty_str.to_lowercase()),
-        Some(f) => format_ident!("generate_{}", f),
+    let (generation_prefix, field_name) = match field_ident {
+        None => ("generate_random_", ty_str.to_lowercase()),
+        Some(f) => ("generate_", f.to_string()),
     };
 
-    let doc_msg = format!(
-        "Generates a custom random instance of `{}`", 
-        field_ident.as_ref().map(|x| x.to_string()).unwrap_or(ty_str.to_string())
-    );
+    let generate_ty_name = format!("{generation_prefix}{field_name}");
+    let doc_msg = format!("Generates a custom random instance of `{}`", field_name);
 
     trait_methods.insert(
-        generate_ty_name.to_string(),
+        generate_ty_name.clone(),
         quote! {
             #[doc = #doc_msg]
             fn #generate_ty_name<R: rand::Rng + ?Sized>(rng: &mut R) -> #ty;
