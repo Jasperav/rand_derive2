@@ -25,7 +25,10 @@ pub(crate) fn transform(input: DeriveInput) -> TokenStream {
         let trait_methods = trait_methods.values().cloned().collect::<Vec<_>>();
         let trait_name = trait_name(name);
 
-        let doc_msg = format!("Derived trait used to customize the generation of type `{}`", name);
+        let doc_msg = format!(
+            "Derived trait used to customize the generation of type `{}`",
+            name
+        );
 
         tokens.extend(quote! {
             #[doc = #doc_msg]
