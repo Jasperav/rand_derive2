@@ -173,11 +173,11 @@ fn add_to_trait_methods(
         Some(f) => ("generate_", f.to_string()),
     };
 
-    let generate_ty_name = format!("{generation_prefix}{field_name}");
+    let generate_ty_name = format_ident!("{generation_prefix}{field_name}");
     let doc_msg = format!("Generates a custom random instance of `{}`", field_name);
 
     trait_methods.insert(
-        generate_ty_name.clone(),
+        generate_ty_name.to_string(),
         quote! {
             #[doc = #doc_msg]
             fn #generate_ty_name<R: rand::Rng + ?Sized>(rng: &mut R) -> #ty;
