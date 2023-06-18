@@ -1,121 +1,135 @@
+#![warn(missing_docs)]
+#![allow(dead_code)]
+//! Example for using the `rand_derive2` crate.
+
+use rand_derive2::RandGen;
+
+#[derive(RandGen)]
+struct SomeFields {
+    age: i32,
+    byte: u8,
+}
+
+/// Documented
+#[derive(RandGen)]
+pub struct UnitStruct;
+
+/// Documented
+#[derive(RandGen)]
+pub struct Recursive {
+    field0: SomeFields,
+    field1: std::string::String,
+    field2: uuid::Uuid,
+    field3: UnitStruct,
+    field4: Vec<u8>,
+    field5: std::vec::Vec<u8>,
+    #[rand_derive(default)]
+    field6: std::string::String,
+}
+
+/// Documented
+#[derive(RandGen)]
+pub struct CustomRand {
+    #[rand_derive(custom)]
+    field0: &'static str,
+    #[rand_derive(custom)]
+    field1: Vec<i32>,
+    #[rand_derive(custom)]
+    field2: UnitStruct,
+}
+
+impl CustomRand {
+    const STRING: &'static str = "string";
+
+    fn vec() -> Vec<i32> {
+        vec![1, 2]
+    }
+}
+
+impl TestDataProviderForCustomRand for CustomRand {
+    fn generate_field0<R: rand::Rng + ?Sized>(_: &mut R) -> &'static str {
+        CustomRand::STRING
+    }
+
+    fn generate_field1<R: rand::Rng + ?Sized>(_: &mut R) -> Vec<i32> {
+        CustomRand::vec()
+    }
+
+    fn generate_field2<R: rand::Rng + ?Sized>(_: &mut R) -> UnitStruct {
+        UnitStruct
+    }
+}
+
+/// Documented
+#[derive(RandGen)]
+struct DefaultVecIsEmptyVec {
+    #[rand_derive(empty)]
+    empty_vec: Vec<i32>,
+}
+
+#[derive(RandGen)]
+struct UnnamedBoi(SomeFields, String, i32);
+
+/// Documented
+#[derive(RandGen)]
+#[allow(missing_docs)]
+pub enum SomeEnum {
+    Empty,
+    Named { some_field: i32, another_field: i32 },
+    Unnamed(i32, i32),
+}
+
+/// Docuemnted
+#[derive(RandGen, PartialEq, Debug)]
+#[allow(missing_docs)]
+pub enum SomeEnumSkipVariants {
+    #[rand_derive(skip)]
+    SkipMe,
+    DontSkipMe,
+    DontSkipMeAlso,
+}
+
+/// Documented
+#[derive(RandGen)]
+#[allow(dead_code)]
+pub struct Options {
+    #[rand_derive(some)]
+    field0: Option<i32>,
+    field1: Option<i32>,
+}
+
+/// Documented
+#[derive(RandGen)]
+#[allow(dead_code)]
+pub struct PleasePanic {
+    #[rand_derive(panic)]
+    some_property: i32,
+}
+
+/// Documented
+#[derive(RandGen)]
+#[allow(dead_code)]
+pub struct NoneOption {
+    #[rand_derive(none)]
+    some_property: Option<i32>,
+}
+#[derive(RandGen)]
+struct Fixed {
+    #[rand_derive(fixed = "static")]
+    str: &'static str,
+    #[rand_derive(fixed = "Some String")]
+    string: String,
+    #[rand_derive(fixed = "1")]
+    i32: i32,
+    #[rand_derive(fixed = "false")]
+    bool_false: bool,
+    #[rand_derive(fixed = "true")]
+    bool_true: bool,
+}
+
 #[cfg(test)]
 mod test {
-    use rand_derive2::RandGen;
-
-    #[derive(RandGen)]
-    #[allow(dead_code)]
-    struct SomeFields {
-        age: i32,
-        byte: u8
-    }
-
-    #[derive(RandGen)]
-    pub struct UnitStruct;
-
-    #[derive(RandGen)]
-    #[allow(dead_code)]
-    struct Recursive {
-        field0: SomeFields,
-        field1: std::string::String,
-        field2: uuid::Uuid,
-        field3: UnitStruct,
-        field4: Vec<u8>,
-        field5: std::vec::Vec<u8>,
-        #[rand_derive(default)]
-        field6: std::string::String,
-    }
-
-    #[derive(RandGen)]
-    #[allow(dead_code)]
-    struct CustomRand {
-        #[rand_derive(custom)]
-        field0: &'static str,
-        #[rand_derive(custom)]
-        field1: Vec<i32>,
-        #[rand_derive(custom)]
-        field2: UnitStruct
-    }
-
-    impl CustomRand {
-        const STRING: &'static str = "string";
-
-        fn vec() -> Vec<i32> {
-            vec![1, 2]
-        }
-    }
-
-    impl TestDataProviderForCustomRand for CustomRand {
-        fn generate_field0<R: rand::Rng + ?Sized>(_: &mut R) -> &'static str {
-            CustomRand::STRING
-        }
-
-        fn generate_field1<R: rand::Rng + ?Sized>(_: &mut R) -> Vec<i32> {
-            CustomRand::vec()
-        }
-
-        fn generate_field2<R: rand::Rng + ?Sized>(_: &mut R) -> UnitStruct {
-            UnitStruct
-        }
-    }
-
-    #[derive(RandGen)]
-    struct DefaultVecIsEmptyVec {
-        #[rand_derive(empty)]
-        empty_vec: Vec<i32>
-    }
-
-    #[derive(RandGen)]
-    struct UnnamedBoi(SomeFields, String, i32);
-
-    #[derive(RandGen)]
-    pub enum SomeEnum {
-        Empty,
-        Named { some_field: i32, another_field: i32 },
-        Unnamed(i32, i32)
-    }
-
-    #[derive(RandGen, PartialEq, Debug)]
-    pub enum SomeEnumSkipVariants {
-        #[rand_derive(skip)]
-        SkipMe,
-        DontSkipMe,
-        DontSkipMeAlso
-    }
-
-    #[derive(RandGen)]
-    #[allow(dead_code)]
-    struct Options {
-        #[rand_derive(some)]
-        field0: Option<i32>,
-        field1: Option<i32>
-    }
-
-    #[derive(RandGen)]
-    #[allow(dead_code)]
-    struct PleasePanic {
-        #[rand_derive(panic)]
-        some_property: i32
-    }
-
-    #[derive(RandGen)]
-    #[allow(dead_code)]
-    struct NoneOption {
-        #[rand_derive(none)]
-        some_property: Option<i32>
-    }
-    #[derive(RandGen)]
-    struct Fixed {
-        #[rand_derive(fixed = "static")]
-        str: &'static str,
-        #[rand_derive(fixed = "Some String")]
-        string: String,
-        #[rand_derive(fixed = "1")]
-        i32: i32,
-        #[rand_derive(fixed = "false")]
-        bool_false: bool,
-        #[rand_derive(fixed = "true")]
-        bool_true: bool
-    }
+    use super::*;
 
     #[test]
     fn test_customize() {

@@ -25,7 +25,13 @@ pub(crate) fn transform(input: DeriveInput) -> TokenStream {
         let trait_methods = trait_methods.values().cloned().collect::<Vec<_>>();
         let trait_name = trait_name(name);
 
+        let doc_msg = format!(
+            "Derived trait used to customize the generation of type `{}`",
+            name
+        );
+
         tokens.extend(quote! {
+            #[doc = #doc_msg]
             pub trait #trait_name {
                 #(#trait_methods)*
             }
@@ -45,10 +51,12 @@ pub(crate) fn transform(input: DeriveInput) -> TokenStream {
         }
 
         impl #name {
+            #[doc = "Generates a random instance of this type"]
             pub fn generate_random() -> Self {
                 rand::random()
             }
 
+            #[doc = "Generates a random instance of this type with the possibility to customize it"]
             pub fn generate_random_customize<T: FnOnce(&mut Self)>(customize: T) -> Self {
                 let mut entity = rand::random();
 
@@ -160,15 +168,19 @@ fn add_to_trait_methods(
     trait_methods: &mut TraitMethods,
 ) -> TokenStream {
     let trait_name = trait_name(type_ident);
-    let generate_ty_name = match field_ident {
-        None => format_ident!("generate_random_{}", ty_str.to_lowercase()),
-        Some(f) => format_ident!("generate_{}", f),
+    let (generation_prefix, field_name) = match field_ident {
+        None => ("generate_random_", ty_str.to_lowercase()),
+        Some(f) => ("generate_", f.to_string()),
     };
+
+    let generate_ty_name = format_ident!("{generation_prefix}{field_name}");
+    let doc_msg = format!("Generates a custom random instance of `{}`", field_name);
 
     trait_methods.insert(
         generate_ty_name.to_string(),
         quote! {
-           fn #generate_ty_name<R: rand::Rng + ?Sized>(rng: &mut R) -> #ty;
+            #[doc = #doc_msg]
+            fn #generate_ty_name<R: rand::Rng + ?Sized>(rng: &mut R) -> #ty;
         },
     );
 
